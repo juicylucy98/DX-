@@ -3,7 +3,6 @@ import { saveResponse, getSettings } from '@/lib/blob';
 
 export async function POST(req: NextRequest) {
   try {
-    console.log('[submit] USE_BLOB:', !!process.env.BLOB_READ_WRITE_TOKEN, 'token prefix:', process.env.BLOB_READ_WRITE_TOKEN?.slice(0, 10));
     const settings = await getSettings();
     if (!settings.open) {
       return NextResponse.json({ error: '설문이 마감되었습니다.' }, { status: 403 });
