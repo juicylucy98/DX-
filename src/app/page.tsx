@@ -45,9 +45,8 @@ export default function HomePage() {
           <h1 className="text-2xl font-bold mb-1">DX 리터러시 향상 교육</h1>
           <p className="text-base opacity-85 mb-4">만족도 조사</p>
           {/* 캐릭터 */}
-          <div className="flex justify-center items-end gap-6 mt-2">
-            <img src="/KakaoTalk_20240828_151451024.jpg" alt="" className="w-20 h-20 rounded-full object-cover opacity-90 shadow-md" style={{ marginBottom: '-4px' }} />
-            <img src="/포잉.png" alt="" className="w-20 h-20 object-contain opacity-95" style={{ marginBottom: '-4px' }} />
+          <div className="flex justify-center items-end mt-2">
+            <img src="/포잉.png" alt="" className="w-24 h-24 object-contain opacity-95" style={{ marginBottom: '-4px' }} />
           </div>
         </div>
       </header>
