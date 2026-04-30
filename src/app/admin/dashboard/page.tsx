@@ -267,7 +267,7 @@ export default function AdminDashboardPage() {
                           <p className="font-bold" style={{ color: '#00704a' }}>{r.q2}점</p>
                         </div>
                         <div className="bg-white rounded-lg p-2">
-                          <p className="text-xs text-gray-400">강사 효과</p>
+                          <p className="text-xs text-gray-400">강사</p>
                           <p className="font-bold" style={{ color: '#00704a' }}>{r.q3}점</p>
                         </div>
                         <div className="bg-white rounded-lg p-2">
