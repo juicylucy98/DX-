@@ -133,7 +133,7 @@ export default function SurveyPage() {
           {/* Q2 */}
           <RadioGroup
             questionNum="2."
-            label={<>급변 교육 내용이 기존의 업무 방식을 개선하거나 편의성을 높이는 데<br />도움이 될 것으로 기대하십니까?</>}
+            label={<>급변 교육 내용이 기존의 업무 방식을 개선하거나 편의성을 높이는 데<br className="hidden sm:block" />도움이 될 것으로 기대하십니까?</>}
             options={Q2_OPTIONS}
             value={q2}
             onChange={setQ2}
@@ -151,7 +151,7 @@ export default function SurveyPage() {
           {/* Q4 */}
           <div className="survey-card mb-5">
             <h2 className="text-sm font-bold mb-3" style={{ color: '#00704a' }}>
-              4. 본 교육에서 좋았던 점이나, 향후 교육에 반영되길 바라는 점(개선사항)을<br />자유롭게 기술해 주세요.
+              4. 본 교육에서 좋았던 점이나, 향후 교육에 반영되길 바라는 점(개선사항)을<br className="hidden sm:block" />자유롭게 기술해 주세요.
             </h2>
             <textarea
               className="form-input"
