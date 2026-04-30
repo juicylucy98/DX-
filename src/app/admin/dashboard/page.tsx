@@ -116,12 +116,13 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* 전체 요약 */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
           {[
             { label: '총 응답', value: data.allResponses.length + '건' },
             { label: '진행 회차', value: data.sessions.length + '회차' },
-            { label: 'Q2 전체 평균', value: avg('avgQ2', data.sessions) + '점' },
-            { label: 'Q5 전체 만족도', value: avg('avgQ5', data.sessions) + '점' },
+            { label: 'Q2 교육 도움 평균', value: avg('avgQ2', data.sessions) + '점' },
+            { label: 'Q3 강사 효과 평균', value: avg('avgQ3', data.sessions) + '점' },
+            { label: 'Q5 전반 만족도 평균', value: avg('avgQ5', data.sessions) + '점' },
           ].map(({ label, value }) => (
             <div key={label} className="stat-card">
               <p className="text-xs text-gray-500 mb-1">{label}</p>
