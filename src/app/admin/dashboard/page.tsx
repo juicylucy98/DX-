@@ -4,6 +4,23 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import type { AdminData, SessionAnalytics, DXResponse } from '@/lib/types';
 
+function getSentiment(text: string): 'positive' | 'negative' | 'neutral' {
+  const t = text;
+  const pos = ['좋', '감사', '유익', '도움', '만족', '훌륭', '재미', '흥미', '쉽', '친절', '유용', '최고', '기대', '이해', '명확', '알기', '잘', '열정', '성실', '깔끔', '체계', '완벽', '최적', '실용', '효율', '좋았', '좋아', '고맙'];
+  const neg = ['아쉽', '불만', '어렵', '부족', '개선', '힘들', '지루', '불편', '실망', '안 좋', '없었', '느렸', '빠르게', '너무 빠', '이해하기 어', '어려웠', '부족했', '더 필요', '보완'];
+  const posScore = pos.filter(w => t.includes(w)).length;
+  const negScore = neg.filter(w => t.includes(w)).length;
+  if (posScore > negScore) return 'positive';
+  if (negScore > posScore) return 'negative';
+  return 'neutral';
+}
+
+function SentimentIcon({ sentiment }: { sentiment: 'positive' | 'negative' | 'neutral' }) {
+  if (sentiment === 'positive') return <span title="긍정" style={{ fontSize: '1.1rem' }}>🟢😊</span>;
+  if (sentiment === 'negative') return <span title="부정" style={{ fontSize: '1.1rem' }}>🔴😢</span>;
+  return <span title="중립/불명확" style={{ fontSize: '1.1rem' }}>⚪🤔</span>;
+}
+
 export default function AdminDashboardPage() {
   const router = useRouter();
   const [data, setData] = useState<AdminData | null>(null);
@@ -74,7 +91,21 @@ export default function AdminDashboardPage() {
     ? data.allResponses
     : data.allResponses.filter(r => r.session === activeSession);
 
-  const SCORE_LABELS: Record<number, string> = { 5: '매우 그렇다/만족', 4: '그렇다/만족', 3: '보통', 2: '아니다/불만족', 1: '매우 아니다/불만족' };
+  // 직급별 통계
+  const gradeMap = new Map<string, DXResponse[]>();
+  for (const r of displayResponses) {
+    if (!gradeMap.has(r.grade)) gradeMap.set(r.grade, []);
+    gradeMap.get(r.grade)!.push(r);
+  }
+  const gradeStats = Array.from(gradeMap.entries())
+    .map(([grade, responses]) => ({
+      grade,
+      total: responses.length,
+      avgQ2: (responses.reduce((s, r) => s + r.q2, 0) / responses.length),
+      avgQ3: (responses.reduce((s, r) => s + r.q3, 0) / responses.length),
+      avgQ5: (responses.reduce((s, r) => s + r.q5, 0) / responses.length),
+    }))
+    .sort((a, b) => b.total - a.total);
 
   return (
     <div className="min-h-screen" style={{ background: '#f0f4f8' }}>
@@ -182,6 +213,37 @@ export default function AdminDashboardPage() {
               </div>
             )}
 
+            {/* 직급별 통계 */}
+            {gradeStats.length > 0 && (
+              <div className="mb-6">
+                <p className="text-sm font-semibold text-gray-700 mb-3">직급별 평균 점수</p>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        <th className="text-left px-3 py-2 text-gray-600 font-semibold rounded-tl-lg">직급</th>
+                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">응답수</th>
+                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">Q2 교육 도움 평균</th>
+                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">Q3 강사 효과 평균</th>
+                        <th className="text-center px-3 py-2 text-gray-600 font-semibold rounded-tr-lg">Q5 전반 만족도 평균</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {gradeStats.map(g => (
+                        <tr key={g.grade} className="border-t border-gray-100 hover:bg-gray-50">
+                          <td className="px-3 py-2 font-semibold text-gray-700">{g.grade}</td>
+                          <td className="px-3 py-2 text-center text-gray-600">{g.total}명</td>
+                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#00704a' }}>{g.avgQ2.toFixed(1)}</td>
+                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#00704a' }}>{g.avgQ3.toFixed(1)}</td>
+                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#00704a' }}>{g.avgQ5.toFixed(1)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
             {/* 개별 응답 */}
             <div>
               <p className="text-sm font-semibold text-gray-700 mb-3">개별 응답 ({displayResponses.length}건)</p>
@@ -214,9 +276,12 @@ export default function AdminDashboardPage() {
                         </div>
                       </div>
                       {r.q4 && (
-                        <p className="text-gray-600 text-xs bg-white rounded-lg p-2">
-                          <span className="font-semibold">Q4 의견:</span> {r.q4}
-                        </p>
+                        <div className="bg-white rounded-lg p-2 flex items-start gap-2">
+                          <SentimentIcon sentiment={getSentiment(r.q4)} />
+                          <p className="text-gray-600 text-xs">
+                            <span className="font-semibold">Q4 의견:</span> {r.q4}
+                          </p>
+                        </div>
                       )}
                     </div>
                   ))}
