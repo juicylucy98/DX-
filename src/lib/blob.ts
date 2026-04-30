@@ -8,23 +8,31 @@ import fs from 'fs';
 const DATA_DIR = path.join(process.cwd(), '.local-data');
 
 function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+  } catch { /* read-only filesystem (e.g. Vercel) — ignore */ }
 }
 function localRead<T>(filename: string): T[] {
-  ensureDataDir();
-  const fp = path.join(DATA_DIR, filename);
-  if (!fs.existsSync(fp)) return [];
-  return JSON.parse(fs.readFileSync(fp, 'utf-8'));
+  try {
+    ensureDataDir();
+    const fp = path.join(DATA_DIR, filename);
+    if (!fs.existsSync(fp)) return [];
+    return JSON.parse(fs.readFileSync(fp, 'utf-8'));
+  } catch { return []; }
 }
 function localWrite(filename: string, data: unknown) {
-  ensureDataDir();
-  fs.writeFileSync(path.join(DATA_DIR, filename), JSON.stringify(data, null, 2));
+  try {
+    ensureDataDir();
+    fs.writeFileSync(path.join(DATA_DIR, filename), JSON.stringify(data, null, 2));
+  } catch { /* read-only filesystem — ignore */ }
 }
 function localReadOne<T>(filename: string, fallback: T): T {
-  ensureDataDir();
-  const fp = path.join(DATA_DIR, filename);
-  if (!fs.existsSync(fp)) return fallback;
-  return JSON.parse(fs.readFileSync(fp, 'utf-8'));
+  try {
+    ensureDataDir();
+    const fp = path.join(DATA_DIR, filename);
+    if (!fs.existsSync(fp)) return fallback;
+    return JSON.parse(fs.readFileSync(fp, 'utf-8'));
+  } catch { return fallback; }
 }
 
 async function blobPut(filename: string, data: unknown) {
