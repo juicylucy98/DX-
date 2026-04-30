@@ -3,6 +3,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import type { AdminData, SessionAnalytics, DXResponse } from '@/lib/types';
+import MissingRespondents from '@/components/MissingRespondents';
+import ExportButtons from '@/components/ExportButtons';
 
 function getSentiment(text: string): 'positive' | 'negative' | 'neutral' {
   const t = text;
@@ -115,7 +117,8 @@ export default function AdminDashboardPage() {
             <p className="text-xs opacity-75 tracking-widest uppercase">POSCO International</p>
             <h1 className="text-xl font-bold">DX 교육 만족도 관리자</h1>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <ExportButtons data={data} />
             <button onClick={handleClear} disabled={clearing}
               className="text-sm bg-red-500/80 hover:bg-red-500 text-white px-3 py-2 rounded-lg font-medium">
               {clearing ? '삭제 중...' : '데이터 초기화'}
@@ -244,8 +247,11 @@ export default function AdminDashboardPage() {
               </div>
             )}
 
+            {/* 미응답자 조회 */}
+            <MissingRespondents responses={displayResponses} />
+
             {/* 개별 응답 */}
-            <div>
+            <div className="mt-6">
               <p className="text-sm font-semibold text-gray-700 mb-3">개별 응답 ({displayResponses.length}건)</p>
               {displayResponses.length === 0 ? (
                 <p className="text-sm text-gray-400">아직 응답이 없습니다.</p>
