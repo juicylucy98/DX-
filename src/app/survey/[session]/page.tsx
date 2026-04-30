@@ -96,10 +96,13 @@ export default function SurveyPage() {
 
   return (
     <div className="min-h-screen" style={{ background: '#f0f4f8' }}>
-      <header className="header-gradient text-white py-8 px-4 text-center">
+      <header className="header-gradient text-white pt-6 pb-0 px-4 text-center overflow-hidden">
         <p className="text-xs opacity-75 tracking-widest uppercase mb-1">POSCO International</p>
         <h1 className="text-xl font-bold">DX 리터러시 향상 교육</h1>
-        <p className="text-sm opacity-85 mt-1">제{session}회차 만족도 조사</p>
+        <p className="text-sm opacity-85 mt-1 mb-3">제{session}회차 만족도 조사</p>
+        <div className="flex justify-center items-end">
+          <img src="/포잉.png" alt="" className="w-16 h-16 object-contain opacity-95" style={{ marginBottom: '-4px' }} />
+        </div>
       </header>
 
       <main className="max-w-xl mx-auto px-4 py-8">
