@@ -161,9 +161,9 @@ export default function AdminDashboardPage() {
                       <tr className="bg-gray-50">
                         <th className="text-left px-3 py-2 text-gray-600 font-semibold rounded-tl-lg">회차</th>
                         <th className="text-center px-3 py-2 text-gray-600 font-semibold">응답수</th>
-                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">Q2 교육 도움</th>
-                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">Q3 강사 효과</th>
-                        <th className="text-center px-3 py-2 text-gray-600 font-semibold rounded-tr-lg">Q5 전반 만족</th>
+                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">Q2 교육 도움 평균</th>
+                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">Q3 강사 효과 평균</th>
+                        <th className="text-center px-3 py-2 text-gray-600 font-semibold rounded-tr-lg">Q5 전반 만족도 평균</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -201,7 +201,7 @@ export default function AdminDashboardPage() {
                       </div>
                       <div className="grid grid-cols-3 gap-2 mb-2 text-center">
                         <div className="bg-white rounded-lg p-2">
-                          <p className="text-xs text-gray-400">Q2 도움 기대</p>
+                          <p className="text-xs text-gray-400">Q2 교육 도움</p>
                           <p className="font-bold" style={{ color: '#00704a' }}>{r.q2}점</p>
                         </div>
                         <div className="bg-white rounded-lg p-2">
@@ -209,7 +209,7 @@ export default function AdminDashboardPage() {
                           <p className="font-bold" style={{ color: '#00704a' }}>{r.q3}점</p>
                         </div>
                         <div className="bg-white rounded-lg p-2">
-                          <p className="text-xs text-gray-400">Q5 전반 만족</p>
+                          <p className="text-xs text-gray-400">Q5 전반 만족도</p>
                           <p className="font-bold" style={{ color: '#00704a' }}>{r.q5}점</p>
                         </div>
                       </div>
