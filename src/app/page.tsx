@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-const SESSIONS = Array.from({ length: 30 }, (_, i) => i + 1);
+const SESSIONS = Array.from({ length: 27 }, (_, i) => i + 4);
 
 export default function HomePage() {
   const router = useRouter();
