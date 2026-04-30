@@ -151,9 +151,9 @@ export default function AdminDashboardPage() {
           {[
             { label: '총 응답', value: data.allResponses.length + '건' },
             { label: '진행 회차', value: data.sessions.length + '회차' },
-            { label: 'Q2 교육 도움 평균', value: avg('avgQ2', data.sessions) + '점' },
-            { label: 'Q3 강사 효과 평균', value: avg('avgQ3', data.sessions) + '점' },
-            { label: 'Q5 전반 만족도 평균', value: avg('avgQ5', data.sessions) + '점' },
+            { label: '교육 내용(평균)', value: avg('avgQ2', data.sessions) + '점' },
+            { label: '강사(평균)', value: avg('avgQ3', data.sessions) + '점' },
+            { label: '만족도(평균)', value: avg('avgQ5', data.sessions) + '점' },
           ].map(({ label, value }) => (
             <div key={label} className="stat-card">
               <p className="text-xs text-gray-500 mb-1">{label}</p>
@@ -192,9 +192,9 @@ export default function AdminDashboardPage() {
                       <tr className="bg-gray-50">
                         <th className="text-left px-3 py-2 text-gray-600 font-semibold rounded-tl-lg">회차</th>
                         <th className="text-center px-3 py-2 text-gray-600 font-semibold">응답수</th>
-                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">Q2 교육 도움 평균</th>
-                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">Q3 강사 효과 평균</th>
-                        <th className="text-center px-3 py-2 text-gray-600 font-semibold rounded-tr-lg">Q5 전반 만족도 평균</th>
+                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">교육 내용(평균)</th>
+                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">강사(평균)</th>
+                        <th className="text-center px-3 py-2 text-gray-600 font-semibold rounded-tr-lg">만족도(평균)</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -223,9 +223,9 @@ export default function AdminDashboardPage() {
                       <tr className="bg-gray-50">
                         <th className="text-left px-3 py-2 text-gray-600 font-semibold rounded-tl-lg">직급</th>
                         <th className="text-center px-3 py-2 text-gray-600 font-semibold">응답수</th>
-                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">Q2 교육 도움 평균</th>
-                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">Q3 강사 효과 평균</th>
-                        <th className="text-center px-3 py-2 text-gray-600 font-semibold rounded-tr-lg">Q5 전반 만족도 평균</th>
+                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">교육 내용(평균)</th>
+                        <th className="text-center px-3 py-2 text-gray-600 font-semibold">강사(평균)</th>
+                        <th className="text-center px-3 py-2 text-gray-600 font-semibold rounded-tr-lg">만족도(평균)</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -263,15 +263,15 @@ export default function AdminDashboardPage() {
                       </div>
                       <div className="grid grid-cols-3 gap-2 mb-2 text-center">
                         <div className="bg-white rounded-lg p-2">
-                          <p className="text-xs text-gray-400">Q2 교육 도움</p>
+                          <p className="text-xs text-gray-400">교육 내용</p>
                           <p className="font-bold" style={{ color: '#00704a' }}>{r.q2}점</p>
                         </div>
                         <div className="bg-white rounded-lg p-2">
-                          <p className="text-xs text-gray-400">Q3 강사 효과</p>
+                          <p className="text-xs text-gray-400">강사 효과</p>
                           <p className="font-bold" style={{ color: '#00704a' }}>{r.q3}점</p>
                         </div>
                         <div className="bg-white rounded-lg p-2">
-                          <p className="text-xs text-gray-400">Q5 전반 만족도</p>
+                          <p className="text-xs text-gray-400">만족도</p>
                           <p className="font-bold" style={{ color: '#00704a' }}>{r.q5}점</p>
                         </div>
                       </div>
