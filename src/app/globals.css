@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #00704a;
+  --primary-dark: #005538;
+  --primary-light: #e6f4ef;
+}
+
+body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; }
+
+.header-gradient {
+  background: linear-gradient(135deg, #00704a 0%, #005538 100%);
+}
+
+.survey-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.07);
+}
+
+.btn-primary {
+  background: #00704a;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+}
+.btn-primary:hover:not(:disabled) { background: #005538; }
+.btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.form-input {
+  width: 100%;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.92rem;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+  resize: vertical;
+}
+.form-input:focus { border-color: #00704a; }
+
+.radio-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.radio-option input[type="radio"] { accent-color: #00704a; width: 18px; height: 18px; cursor: pointer; }
+.radio-option span { font-size: 11px; color: #64748b; text-align: center; line-height: 1.3; }
+
+.session-btn {
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.75rem 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #374151;
+  background: white;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+.session-btn:hover { border-color: #00704a; color: #00704a; background: #e6f4ef; }
+
+.tab-active { color: #00704a; border-bottom: 2px solid #00704a; }
+
+.badge-open { background: #dcfce7; color: #166534; }
+.badge-closed { background: #fee2e2; color: #991b1b; }
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  text-align: center;
+}
