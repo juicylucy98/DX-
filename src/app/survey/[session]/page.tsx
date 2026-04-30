@@ -136,7 +136,7 @@ export default function SurveyPage() {
           {/* Q2 */}
           <RadioGroup
             questionNum="2."
-            label={<>금번 교육 내용이 기존의 업무 방식을 개선하거나 편의성을 높이는 데 도움이<br className="hidden sm:block" />될 것으로 기대하십니까?</>}
+            label={<>금번 교육 내용이 기존의 업무 방식을 개선하거나 편의성을 높이는 데 도움이<br />될 것으로 기대하십니까?</>}
             options={Q2_OPTIONS}
             value={q2}
             onChange={setQ2}
