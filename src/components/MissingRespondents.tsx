@@ -3,8 +3,13 @@ import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import type { DXResponse } from '@/lib/types';
 
-interface Attendee { name: string; email: string; }
+interface Attendee { name: string; email: string; dept: string; }
 interface SheetData { sheetName: string; attendees: Attendee[]; }
+
+// 부서명 정규화: 공백 제거 후 비교
+function normDept(s: string) {
+  return s.replace(/\s+/g, '').toLowerCase();
+}
 
 async function parseWorkbook(file: File): Promise<SheetData[]> {
   return new Promise((resolve, reject) => {
@@ -13,25 +18,39 @@ async function parseWorkbook(file: File): Promise<SheetData[]> {
       try {
         const wb = XLSX.read(e.target?.result, { type: 'binary', codepage: 949 });
         const result: SheetData[] = [];
+
         for (const sheetName of wb.SheetNames) {
           const rows: string[][] = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { header: 1, defval: '' }) as string[][];
-          let headerRow = -1, nameCol = -1, emailCol = -1;
+
+          // 헤더 행 탐색 (E-mail 포함된 행)
+          let headerRow = -1, nameCol = -1, emailCol = -1, deptCol = -1;
           for (let i = 0; i < Math.min(6, rows.length); i++) {
             const row = rows[i].map(v => String(v));
             const eIdx = row.findIndex(v => v === 'E-mail');
             if (eIdx >= 0) {
-              headerRow = i; emailCol = eIdx;
+              headerRow = i;
+              emailCol = eIdx;
               nameCol = row.findIndex(v => v.includes('Name') || v.includes('이름'));
+              // 영문 헤더 행(headerRow+1)에서 Department 찾기
+              if (rows.length > i + 1) {
+                const engRow = rows[i + 1].map(v => String(v));
+                deptCol = engRow.findIndex(v => v === 'Department');
+              }
               break;
             }
           }
           if (headerRow < 0 || emailCol < 0 || nameCol < 0) continue;
+
           const attendees: Attendee[] = [];
+          // 데이터는 headerRow+2 부터 (헤더 + 영문헤더 스킵)
           for (let i = headerRow + 2; i < rows.length; i++) {
             const row = rows[i];
             const name = String(row[nameCol] || '').trim();
             const email = String(row[emailCol] || '').trim();
-            if (name && email && email.includes('@')) attendees.push({ name, email });
+            const dept = deptCol >= 0 ? String(row[deptCol] || '').trim() : '';
+            if (name && email && email.includes('@')) {
+              attendees.push({ name, email, dept });
+            }
           }
           if (attendees.length > 0) result.push({ sheetName, attendees });
         }
@@ -65,8 +84,34 @@ export default function MissingRespondents({ responses }: { responses: DXRespons
   const handleCompare = () => {
     const sheet = sheets.find(s => s.sheetName === selectedSheet);
     if (!sheet) return;
-    const responded = new Set(responses.map(r => r.name.trim()));
-    setMissing(sheet.attendees.filter(a => !responded.has(a.name)));
+
+    // 이름별 응답자 맵 (동명이인 대비 부서도 저장)
+    const respondedByName = new Map<string, string[]>(); // name → [dept, dept, ...]
+    for (const r of responses) {
+      const n = r.name.trim();
+      if (!respondedByName.has(n)) respondedByName.set(n, []);
+      respondedByName.get(n)!.push(normDept(r.department));
+    }
+
+    const result: Attendee[] = [];
+    for (const a of sheet.attendees) {
+      const n = a.name.trim();
+      const depts = respondedByName.get(n);
+
+      if (!depts) {
+        // 이름 자체가 없으면 미응답
+        result.push(a);
+      } else {
+        // 이름이 있는데 동명이인 가능성 → 부서로 구분
+        const aNorm = normDept(a.dept);
+        // 부서 정보가 없거나 매칭되는 부서 없으면 미응답 처리
+        if (aNorm && !depts.some(d => d && d.includes(aNorm) || aNorm.includes(d))) {
+          result.push(a);
+        }
+        // 부서 정보가 없으면 이름 매칭 성공으로 간주
+      }
+    }
+    setMissing(result);
   };
 
   const copyEmails = () => {
@@ -88,7 +133,7 @@ export default function MissingRespondents({ responses }: { responses: DXRespons
             {sheets.map(s => <option key={s.sheetName} value={s.sheetName}>{s.sheetName}</option>)}
           </select>
           <button onClick={handleCompare}
-            className="text-sm px-4 py-2 rounded-lg font-semibold text-white transition-colors"
+            className="text-sm px-4 py-2 rounded-lg font-semibold text-white"
             style={{ background: '#00704a' }}>
             비교하기
           </button>
@@ -102,7 +147,7 @@ export default function MissingRespondents({ responses }: { responses: DXRespons
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs text-gray-500 font-medium">미응답자 <span className="text-red-500 font-bold">{missing.length}명</span></p>
               <button onClick={copyEmails}
-                className="text-xs px-3 py-1.5 rounded-lg font-semibold text-white transition-colors"
+                className="text-xs px-3 py-1.5 rounded-lg font-semibold text-white"
                 style={{ background: copied ? '#6b7280' : '#00704a' }}>
                 {copied ? '복사됨 ✓' : '이메일 전체 복사'}
               </button>
@@ -112,6 +157,7 @@ export default function MissingRespondents({ responses }: { responses: DXRespons
                 <thead className="sticky top-0 bg-gray-50">
                   <tr>
                     <th className="text-left px-3 py-2 text-gray-600 font-semibold">이름</th>
+                    <th className="text-left px-3 py-2 text-gray-600 font-semibold">부서</th>
                     <th className="text-left px-3 py-2 text-gray-600 font-semibold">이메일</th>
                   </tr>
                 </thead>
@@ -119,6 +165,7 @@ export default function MissingRespondents({ responses }: { responses: DXRespons
                   {missing.map((m, i) => (
                     <tr key={i} className="border-t border-gray-100 hover:bg-gray-50">
                       <td className="px-3 py-2 text-gray-700 font-medium">{m.name}</td>
+                      <td className="px-3 py-2 text-gray-500 text-xs">{m.dept}</td>
                       <td className="px-3 py-2 text-gray-500 text-xs font-mono">{m.email}</td>
                     </tr>
                   ))}
