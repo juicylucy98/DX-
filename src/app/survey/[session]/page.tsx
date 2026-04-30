@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 
@@ -15,7 +15,7 @@ function RadioGroup({
   value,
   onChange,
 }: {
-  label: string;
+  label: React.ReactNode;
   questionNum: string;
   options: string[];
   value: number;
@@ -133,7 +133,7 @@ export default function SurveyPage() {
           {/* Q2 */}
           <RadioGroup
             questionNum="2."
-            label="급변 교육 내용이 기존의 업무 방식을 개선하거나 편의성을 높이는 데 도움이 될 것으로 기대하십니까?"
+            label={<>급변 교육 내용이 기존의 업무 방식을 개선하거나 편의성을 높이는 데<br />도움이 될 것으로 기대하십니까?</>}
             options={Q2_OPTIONS}
             value={q2}
             onChange={setQ2}
@@ -151,14 +151,14 @@ export default function SurveyPage() {
           {/* Q4 */}
           <div className="survey-card mb-5">
             <h2 className="text-sm font-bold mb-3" style={{ color: '#00704a' }}>
-              4. 본 교육에서 좋았던 점이나, 향후 교육에 반영되길 바라는 점(개선사항)을 자유롭게 기술해 주세요.
+              4. 본 교육에서 좋았던 점이나, 향후 교육에 반영되길 바라는 점(개선사항)을<br />자유롭게 기술해 주세요.
             </h2>
             <textarea
               className="form-input"
               rows={4}
               value={q4}
               onChange={e => setQ4(e.target.value)}
-              placeholder="자유롭게 작성해주세요. (선택)"
+              placeholder="자유롭게 작성해주세요."
             />
           </div>
 

@@ -39,11 +39,16 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen" style={{ background: '#f0f4f8' }}>
-      <header className="header-gradient text-white py-10 px-4 text-center shadow-lg">
-        <div className="max-w-2xl mx-auto">
+      <header className="header-gradient text-white pt-8 pb-0 px-4 text-center shadow-lg overflow-hidden">
+        <div className="max-w-2xl mx-auto relative">
           <p className="text-sm font-medium tracking-widest opacity-80 mb-2 uppercase">POSCO International</p>
           <h1 className="text-2xl font-bold mb-1">DX 리터러시 향상 교육</h1>
-          <p className="text-base opacity-85">만족도 조사</p>
+          <p className="text-base opacity-85 mb-4">만족도 조사</p>
+          {/* 캐릭터 */}
+          <div className="flex justify-center items-end gap-6 mt-2">
+            <img src="/frog.jpg" alt="" className="w-20 h-20 rounded-full object-cover opacity-90 shadow-md" style={{ marginBottom: '-4px' }} />
+            <img src="/penguin.png" alt="" className="w-20 h-20 object-contain opacity-95" style={{ marginBottom: '-4px' }} />
+          </div>
         </div>
       </header>
 
