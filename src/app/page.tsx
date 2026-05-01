@@ -11,16 +11,24 @@ export default function HomePage() {
   const [open, setOpen] = useState<boolean | null>(null);
   const [fetchError, setFetchError] = useState(false);
 
-  const loadSettings = () => {
+  const loadSettings = async (attempt = 1) => {
     setFetchError(false);
     setOpen(null);
-    fetch('/api/settings')
-      .then(r => r.json())
-      .then(d => setOpen(d.open))
-      .catch(() => setFetchError(true));
+    try {
+      const res = await fetch('/api/settings');
+      const d = await res.json();
+      setOpen(d.open);
+    } catch {
+      if (attempt < 3) {
+        // Cold start 대응: 최대 3회 자동 재시도 (1.5초 간격)
+        setTimeout(() => loadSettings(attempt + 1), 1500);
+      } else {
+        setFetchError(true);
+      }
+    }
   };
 
-  useEffect(() => { loadSettings(); }, []);
+  useEffect(() => { loadSettings(1); }, []);
 
   if (fetchError) {
     return (
