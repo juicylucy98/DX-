@@ -134,7 +134,7 @@ export default function MissingRespondents({ responses }: { responses: DXRespons
           </select>
           <button onClick={handleCompare}
             className="text-sm px-4 py-2 rounded-lg font-semibold text-white"
-            style={{ background: '#00704a' }}>
+            style={{ background: '#2563eb' }}>
             비교하기
           </button>
         </>}
@@ -142,13 +142,13 @@ export default function MissingRespondents({ responses }: { responses: DXRespons
 
       {missing !== null && (
         missing.length === 0
-          ? <p className="text-sm text-green-600 font-medium">✅ 모든 수강자가 응답 완료했습니다!</p>
+          ? <p className="text-sm text-blue-600 font-medium">✅ 모든 수강자가 응답 완료했습니다!</p>
           : <>
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs text-gray-500 font-medium">미응답자 <span className="text-red-500 font-bold">{missing.length}명</span></p>
               <button onClick={copyEmails}
                 className="text-xs px-3 py-1.5 rounded-lg font-semibold text-white"
-                style={{ background: copied ? '#6b7280' : '#00704a' }}>
+                style={{ background: copied ? '#6b7280' : '#2563eb' }}>
                 {copied ? '복사됨 ✓' : '이메일 전체 복사'}
               </button>
             </div>

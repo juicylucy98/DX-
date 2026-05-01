@@ -160,7 +160,7 @@ export default function AdminDashboardPage() {
           ].map(({ label, value }) => (
             <div key={label} className="stat-card">
               <p className="text-xs text-gray-500 mb-1">{label}</p>
-              <p className="text-2xl font-bold" style={{ color: '#00704a' }}>{value}</p>
+              <p className="text-2xl font-bold" style={{ color: '#2563eb' }}>{value}</p>
             </div>
           ))}
         </div>
@@ -203,11 +203,11 @@ export default function AdminDashboardPage() {
                     <tbody>
                       {displaySessions.map(s => (
                         <tr key={s.session} className="border-t border-gray-100 hover:bg-gray-50">
-                          <td className="px-3 py-2 font-semibold" style={{ color: '#00704a' }}>{s.session}회차</td>
+                          <td className="px-3 py-2 font-semibold" style={{ color: '#2563eb' }}>{s.session}회차</td>
                           <td className="px-3 py-2 text-center text-gray-600">{s.total}명</td>
-                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#00704a' }}>{s.avgQ2.toFixed(1)}</td>
-                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#00704a' }}>{s.avgQ3.toFixed(1)}</td>
-                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#00704a' }}>{s.avgQ5.toFixed(1)}</td>
+                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#2563eb' }}>{s.avgQ2.toFixed(1)}</td>
+                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#2563eb' }}>{s.avgQ3.toFixed(1)}</td>
+                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#2563eb' }}>{s.avgQ5.toFixed(1)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -236,9 +236,9 @@ export default function AdminDashboardPage() {
                         <tr key={g.grade} className="border-t border-gray-100 hover:bg-gray-50">
                           <td className="px-3 py-2 font-semibold text-gray-700">{g.grade}</td>
                           <td className="px-3 py-2 text-center text-gray-600">{g.total}명</td>
-                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#00704a' }}>{g.avgQ2.toFixed(1)}</td>
-                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#00704a' }}>{g.avgQ3.toFixed(1)}</td>
-                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#00704a' }}>{g.avgQ5.toFixed(1)}</td>
+                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#2563eb' }}>{g.avgQ2.toFixed(1)}</td>
+                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#2563eb' }}>{g.avgQ3.toFixed(1)}</td>
+                          <td className="px-3 py-2 text-center font-bold" style={{ color: '#2563eb' }}>{g.avgQ5.toFixed(1)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -260,7 +260,7 @@ export default function AdminDashboardPage() {
                   {displayResponses.map(r => (
                     <div key={r.id} className="bg-gray-50 rounded-xl p-4 text-sm">
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
-                        <span className="font-bold px-2 py-0.5 rounded-full text-xs text-white" style={{ background: '#00704a' }}>
+                        <span className="font-bold px-2 py-0.5 rounded-full text-xs text-white" style={{ background: '#2563eb' }}>
                           {r.session}회차
                         </span>
                         <span className="font-semibold text-gray-700">{r.name}</span>
@@ -270,15 +270,15 @@ export default function AdminDashboardPage() {
                       <div className="grid grid-cols-3 gap-2 mb-2 text-center">
                         <div className="bg-white rounded-lg p-2">
                           <p className="text-xs text-gray-400">교육 내용</p>
-                          <p className="font-bold" style={{ color: '#00704a' }}>{r.q2}점</p>
+                          <p className="font-bold" style={{ color: '#2563eb' }}>{r.q2}점</p>
                         </div>
                         <div className="bg-white rounded-lg p-2">
                           <p className="text-xs text-gray-400">강사</p>
-                          <p className="font-bold" style={{ color: '#00704a' }}>{r.q3}점</p>
+                          <p className="font-bold" style={{ color: '#2563eb' }}>{r.q3}점</p>
                         </div>
                         <div className="bg-white rounded-lg p-2">
                           <p className="text-xs text-gray-400">만족도</p>
-                          <p className="font-bold" style={{ color: '#00704a' }}>{r.q5}점</p>
+                          <p className="font-bold" style={{ color: '#2563eb' }}>{r.q5}점</p>
                         </div>
                       </div>
                       {r.q4 && (

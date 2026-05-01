@@ -35,7 +35,7 @@ export default function AdminPage() {
       <div className="survey-card max-w-sm w-full">
         <div className="text-center mb-6">
           <p className="text-xs tracking-widest uppercase text-gray-400 mb-1">POSCO International</p>
-          <h1 className="text-xl font-bold" style={{ color: '#00704a' }}>관리자 로그인</h1>
+          <h1 className="text-xl font-bold" style={{ color: '#2563eb' }}>관리자 로그인</h1>
         </div>
         <form onSubmit={handleLogin}>
           <input

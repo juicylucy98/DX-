@@ -24,7 +24,7 @@ function RadioGroup({
   const scores = [5, 4, 3, 2, 1];
   return (
     <div className="survey-card mb-5">
-      <h2 className="text-sm font-bold mb-4" style={{ color: '#00704a' }}>
+      <h2 className="text-sm font-bold mb-4" style={{ color: '#2563eb' }}>
         {questionNum} {label}
       </h2>
       <div className="flex justify-between gap-1">
@@ -110,7 +110,7 @@ export default function SurveyPage() {
 
           {/* Q1 */}
           <div className="survey-card mb-5">
-            <h2 className="text-sm font-bold mb-4" style={{ color: '#00704a' }}>
+            <h2 className="text-sm font-bold mb-4" style={{ color: '#2563eb' }}>
               1. 성명/직급/부서를 적어주세요.
             </h2>
             <div className="space-y-3">
@@ -153,7 +153,7 @@ export default function SurveyPage() {
 
           {/* Q4 */}
           <div className="survey-card mb-5">
-            <h2 className="text-sm font-bold mb-3" style={{ color: '#00704a' }}>
+            <h2 className="text-sm font-bold mb-3" style={{ color: '#2563eb' }}>
               4. 본 교육에서 좋았던 점이나, 향후 교육에 반영되길 바라는 점(개선사항)을<br className="hidden sm:block" />자유롭게 기술해 주세요.
             </h2>
             <textarea

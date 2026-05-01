@@ -30,7 +30,7 @@ export default function HomePage() {
       <div className="min-h-screen flex items-center justify-center px-4" style={{ background: '#f0f4f8' }}>
         <div className="survey-card text-center max-w-sm w-full">
           <p className="text-3xl mb-3">🔒</p>
-          <h2 className="text-lg font-bold mb-2" style={{ color: '#00704a' }}>설문이 마감되었습니다</h2>
+          <h2 className="text-lg font-bold mb-2" style={{ color: '#2563eb' }}>설문이 마감되었습니다</h2>
           <p className="text-sm text-gray-500">현재 진행 중인 설문이 없습니다.</p>
         </div>
       </div>
@@ -53,7 +53,7 @@ export default function HomePage() {
 
       <main className="max-w-2xl mx-auto px-4 py-10">
         <div className="survey-card">
-          <h2 className="text-base font-bold text-center mb-6" style={{ color: '#00704a' }}>
+          <h2 className="text-base font-bold text-center mb-6" style={{ color: '#2563eb' }}>
             수강하신 회차를 선택해주세요
           </h2>
           <div className="grid grid-cols-5 gap-2">
