@@ -48,6 +48,10 @@ export default function AdminDashboardPage() {
   useEffect(() => { fetchData(); }, [fetchData]);
 
   const handleToggle = async () => {
+    if (data?.settings.open) {
+      const ok = confirm('설문을 마감하면 참여자들이 더 이상 응답할 수 없습니다.\n정말 마감하시겠습니까?');
+      if (!ok) return;
+    }
     setToggling(true);
     try {
       await fetch('/api/admin/toggle', { method: 'POST', headers: { Authorization: `Bearer ${getToken()}` } });

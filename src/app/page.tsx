@@ -9,13 +9,37 @@ const SESSIONS = Array.from({ length: 9 }, (_, i) => i + 4);
 export default function HomePage() {
   const router = useRouter();
   const [open, setOpen] = useState<boolean | null>(null);
+  const [fetchError, setFetchError] = useState(false);
 
-  useEffect(() => {
+  const loadSettings = () => {
+    setFetchError(false);
+    setOpen(null);
     fetch('/api/settings')
       .then(r => r.json())
       .then(d => setOpen(d.open))
-      .catch(() => setOpen(false));
-  }, []);
+      .catch(() => setFetchError(true));
+  };
+
+  useEffect(() => { loadSettings(); }, []);
+
+  if (fetchError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4" style={{ background: '#f0f4f8' }}>
+        <div className="survey-card text-center max-w-sm w-full">
+          <p className="text-3xl mb-3">⚠️</p>
+          <h2 className="text-lg font-bold mb-2 text-gray-700">서버 연결 중 오류가 발생했습니다</h2>
+          <p className="text-sm text-gray-500 mb-4">잠시 후 다시 시도해주세요.</p>
+          <button
+            onClick={loadSettings}
+            className="btn-primary"
+            style={{ width: 'auto', padding: '0.5rem 1.5rem' }}
+          >
+            다시 시도
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (open === null) {
     return (
