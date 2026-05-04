@@ -38,7 +38,7 @@ export default function HomePage() {
           <h2 className="text-lg font-bold mb-2 text-gray-700">서버 연결 중 오류가 발생했습니다</h2>
           <p className="text-sm text-gray-500 mb-4">잠시 후 다시 시도해주세요.</p>
           <button
-            onClick={loadSettings}
+            onClick={() => loadSettings()}
             className="btn-primary"
             style={{ width: 'auto', padding: '0.5rem 1.5rem' }}
           >
