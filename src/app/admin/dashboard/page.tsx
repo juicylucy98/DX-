@@ -122,6 +122,14 @@ export default function AdminDashboardPage() {
             <h1 className="text-xl font-bold">DX 교육 만족도 관리자</h1>
           </div>
           <div className="flex gap-2 flex-wrap">
+            <a
+              href="https://docs.google.com/spreadsheets/d/1YI2Mp8vw4VEJJGJc3j9QswxNwa7B0jxv8spgSPCb_wl"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm bg-green-500/80 hover:bg-green-500 text-white px-3 py-2 rounded-lg font-medium flex items-center gap-1"
+            >
+              📊 구글 시트
+            </a>
             <ExportButtons data={data} />
             <button onClick={handleClear} disabled={clearing}
               className="text-sm bg-red-500/80 hover:bg-red-500 text-white px-3 py-2 rounded-lg font-medium">
