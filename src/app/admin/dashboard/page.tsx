@@ -29,8 +29,6 @@ export default function AdminDashboardPage() {
   const [activeSession, setActiveSession] = useState<number | 'all'>('all');
   const [toggling, setToggling] = useState(false);
   const [clearing, setClearing] = useState(false);
-  const [syncing, setSyncing] = useState(false);
-  const [syncMsg, setSyncMsg] = useState('');
   const [error, setError] = useState('');
 
   const getToken = useCallback(() => sessionStorage.getItem('adminToken') || '', []);
@@ -59,24 +57,6 @@ export default function AdminDashboardPage() {
       await fetchData();
     } catch { setError('상태 변경 실패'); }
     finally { setToggling(false); }
-  };
-
-  const handleSyncSheets = async () => {
-    setSyncing(true);
-    setSyncMsg('');
-    try {
-      const res = await fetch('/api/admin/sync-sheets', { method: 'POST', headers: { Authorization: `Bearer ${getToken()}` } });
-      const json = await res.json();
-      if (json.success) {
-        setSyncMsg(`✅ ${json.synced}건 동기화 완료`);
-      } else {
-        setSyncMsg('❌ 동기화 실패: ' + json.error);
-      }
-    } catch {
-      setSyncMsg('❌ 동기화 실패');
-    } finally {
-      setSyncing(false);
-    }
   };
 
   const handleClear = async () => {
@@ -149,10 +129,6 @@ export default function AdminDashboardPage() {
             >
               📊 구글 시트
             </a>
-            <button onClick={handleSyncSheets} disabled={syncing}
-              className="text-sm bg-blue-500/80 hover:bg-blue-500 text-white px-3 py-2 rounded-lg font-medium">
-              {syncing ? '동기화 중...' : '🔄 시트 동기화'}
-            </button>
             <button onClick={handleClear} disabled={clearing}
               className="text-sm bg-red-500/80 hover:bg-red-500 text-white px-3 py-2 rounded-lg font-medium">
               {clearing ? '삭제 중...' : '데이터 초기화'}
@@ -167,8 +143,6 @@ export default function AdminDashboardPage() {
 
       <main className="max-w-5xl mx-auto px-4 py-6">
         {error && <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 mb-4 text-sm">{error}</div>}
-        {syncMsg && <div className="bg-blue-50 border border-blue-200 text-blue-700 rounded-lg px-4 py-3 mb-4 text-sm">{syncMsg}</div>}
-
         {/* 설문 상태 토글 */}
         <div className="survey-card flex items-center justify-between mb-6">
           <div>
