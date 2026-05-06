@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import type { AdminData, SessionAnalytics, DXResponse } from '@/lib/types';
 import MissingRespondents from '@/components/MissingRespondents';
-import ExportButtons from '@/components/ExportButtons';
 
 function getSentiment(text: string): 'positive' | 'negative' | 'neutral' {
   const t = text;
@@ -126,11 +125,10 @@ export default function AdminDashboardPage() {
               href="https://docs.google.com/spreadsheets/d/1YI2Mp8vw4VEJJGJc3j9QswxNwa7B0jxv8spgSPCb_wl"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm bg-green-500/80 hover:bg-green-500 text-white px-3 py-2 rounded-lg font-medium flex items-center gap-1"
+              className="text-sm bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-1 transition-colors"
             >
               📊 구글 시트
             </a>
-            <ExportButtons data={data} />
             <button onClick={handleClear} disabled={clearing}
               className="text-sm bg-red-500/80 hover:bg-red-500 text-white px-3 py-2 rounded-lg font-medium">
               {clearing ? '삭제 중...' : '데이터 초기화'}
