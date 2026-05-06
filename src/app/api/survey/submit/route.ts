@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { saveResponse, getSettings } from '@/lib/blob';
+import { sendToSheets } from '@/lib/sheets';
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: '모든 점수 항목을 선택해주세요.' }, { status: 400 });
     }
 
-    await saveResponse({
+    const responseData = {
       session: Number(session),
       name: name.trim(),
       grade: grade.trim(),
@@ -30,7 +31,13 @@ export async function POST(req: NextRequest) {
       q3: Number(q3),
       q4: q4 || '',
       q5: Number(q5),
-    });
+    };
+
+    // GitHub 저장 + Google Sheets 동시 전송
+    await Promise.allSettled([
+      saveResponse(responseData),
+      sendToSheets({ ...responseData, _type: 'dx', timestamp: new Date().toISOString() }),
+    ]);
 
     return NextResponse.json({ success: true });
   } catch (err) {

@@ -70,6 +70,16 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        {/* 관리자 링크 */}
+        <div className="text-center mt-6">
+          <a
+            href="/admin"
+            className="text-xs text-slate-400 hover:text-slate-600 transition-colors"
+          >
+            관리자 로그인
+          </a>
+        </div>
       </div>
     </main>
   );
