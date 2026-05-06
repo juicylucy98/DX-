@@ -15,10 +15,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true });
   }
   try {
-    const { list, del } = await import('@vercel/blob');
-    const { blobs } = await list({ prefix: 'dx-response-' });
-    if (blobs.length > 0) await del(blobs.map(b => b.url));
-    return NextResponse.json({ success: true, deleted: blobs.length });
+    const { clearResponses } = await import('@/lib/blob');
+    await clearResponses();
+    return NextResponse.json({ success: true });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }
