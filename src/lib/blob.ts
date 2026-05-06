@@ -118,11 +118,17 @@ export async function saveResponse(data: Omit<DXResponse, 'id' | 'timestamp'>): 
   };
 
   if (!USE_BLOB) {
-    const existing = localRead<DXResponse>('responses.json');
-    existing.unshift(response);
-    localWrite('responses.json', existing);
-    // GitHub 백업 (비동기, 실패해도 무시)
-    if (USE_GITHUB) ghSaveResponses(existing).catch(() => {});
+    if (USE_GITHUB) {
+      // GitHub가 메인 스토리지 — 기존 데이터 읽어서 추가 후 저장
+      const existing = (await ghGetResponses()) ?? [];
+      existing.unshift(response);
+      await ghSaveResponses(existing);
+    } else {
+      // 로컬 개발 환경 전용
+      const existing = localRead<DXResponse>('responses.json');
+      existing.unshift(response);
+      localWrite('responses.json', existing);
+    }
     return;
   }
 
@@ -139,13 +145,12 @@ export async function saveResponse(data: Omit<DXResponse, 'id' | 'timestamp'>): 
 
 export async function getAllResponses(): Promise<DXResponse[]> {
   if (!USE_BLOB) {
-    const local = localRead<DXResponse>('responses.json');
-    // 로컬 데이터 없으면 GitHub 폴백
-    if (local.length === 0 && USE_GITHUB) {
-      const gh = await ghGetResponses();
-      if (gh && gh.length > 0) return gh;
+    if (USE_GITHUB) {
+      // GitHub가 메인 스토리지
+      return (await ghGetResponses()) ?? [];
     }
-    return local;
+    // 로컬 개발 환경 전용
+    return localRead<DXResponse>('responses.json');
   }
 
   // 신규 단일 파일 조회 (Simple Op - Advanced Op 소모 없음)
@@ -164,8 +169,11 @@ export async function getAllResponses(): Promise<DXResponse[]> {
 
 export async function clearResponses(): Promise<void> {
   if (!USE_BLOB) {
-    localWrite('responses.json', []);
-    if (USE_GITHUB) ghSaveResponses([]).catch(() => {});
+    if (USE_GITHUB) {
+      await ghSaveResponses([]);
+    } else {
+      localWrite('responses.json', []);
+    }
     return;
   }
   await Promise.allSettled([
@@ -179,13 +187,12 @@ const DEFAULT_SETTINGS: Settings = { open: true };
 
 export async function getSettings(): Promise<Settings> {
   if (!USE_BLOB) {
-    const local = localReadOne<Settings>('settings.json', DEFAULT_SETTINGS);
-    // GitHub 폴백 (로컬에 파일이 없고 GitHub 있을 때)
-    if (local === DEFAULT_SETTINGS && USE_GITHUB) {
-      const gh = await ghGetSettings();
-      if (gh !== null) return gh;
+    if (USE_GITHUB) {
+      // GitHub가 메인 스토리지
+      return (await ghGetSettings()) ?? DEFAULT_SETTINGS;
     }
-    return local;
+    // 로컬 개발 환경 전용
+    return localReadOne<Settings>('settings.json', DEFAULT_SETTINGS);
   }
 
   // 직접 URL로 읽기 (Simple Op - Advanced Op 소모 없음)
@@ -203,8 +210,11 @@ export async function getSettings(): Promise<Settings> {
 
 export async function saveSettings(settings: Settings): Promise<void> {
   if (!USE_BLOB) {
-    localWrite('settings.json', settings);
-    if (USE_GITHUB) ghSaveSettings(settings).catch(() => {});
+    if (USE_GITHUB) {
+      await ghSaveSettings(settings);
+    } else {
+      localWrite('settings.json', settings);
+    }
     return;
   }
   // Blob 저장 + GitHub 백업 병렬 실행
