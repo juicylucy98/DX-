@@ -1,4 +1,11 @@
 import type { DXResponse, Settings } from './types';
+import {
+  USE_GITHUB,
+  ghGetResponses,
+  ghSaveResponses,
+  ghGetSettings,
+  ghSaveSettings,
+} from './github-storage';
 
 const USE_BLOB = !!process.env.BLOB_READ_WRITE_TOKEN;
 
@@ -114,21 +121,42 @@ export async function saveResponse(data: Omit<DXResponse, 'id' | 'timestamp'>): 
     const existing = localRead<DXResponse>('responses.json');
     existing.unshift(response);
     localWrite('responses.json', existing);
+    // GitHub 백업 (비동기, 실패해도 무시)
+    if (USE_GITHUB) ghSaveResponses(existing).catch(() => {});
     return;
   }
 
   // 현재 응답 목록 읽기(Simple Op) → 새 응답 추가 → 저장(Advanced Op 1회)
   const existing = await getAllResponses();
   existing.unshift(response);
-  await blobPut('dx-responses.json', existing);
+
+  // Blob 저장 + GitHub 백업 병렬 실행 (GitHub 실패해도 무시)
+  await Promise.allSettled([
+    blobPut('dx-responses.json', existing),
+    USE_GITHUB ? ghSaveResponses(existing) : Promise.resolve(),
+  ]);
 }
 
 export async function getAllResponses(): Promise<DXResponse[]> {
-  if (!USE_BLOB) return localRead<DXResponse>('responses.json');
+  if (!USE_BLOB) {
+    const local = localRead<DXResponse>('responses.json');
+    // 로컬 데이터 없으면 GitHub 폴백
+    if (local.length === 0 && USE_GITHUB) {
+      const gh = await ghGetResponses();
+      if (gh && gh.length > 0) return gh;
+    }
+    return local;
+  }
 
   // 신규 단일 파일 조회 (Simple Op - Advanced Op 소모 없음)
   const responses = await blobGet<DXResponse[]>('dx-responses.json');
   if (responses !== null) return responses;
+
+  // Blob 접근 실패 시 GitHub 폴백
+  if (USE_GITHUB) {
+    const gh = await ghGetResponses();
+    if (gh !== null) return gh;
+  }
 
   // 단일 파일 없을 경우 → 구버전에서 마이그레이션 시도 (최초 1회)
   return await migrateOldResponses();
@@ -137,23 +165,51 @@ export async function getAllResponses(): Promise<DXResponse[]> {
 export async function clearResponses(): Promise<void> {
   if (!USE_BLOB) {
     localWrite('responses.json', []);
+    if (USE_GITHUB) ghSaveResponses([]).catch(() => {});
     return;
   }
-  await blobPut('dx-responses.json', []);
+  await Promise.allSettled([
+    blobPut('dx-responses.json', []),
+    USE_GITHUB ? ghSaveResponses([]) : Promise.resolve(),
+  ]);
 }
 
 // ── Settings ──────────────────────────────────────────────────
 const DEFAULT_SETTINGS: Settings = { open: true };
 
 export async function getSettings(): Promise<Settings> {
-  if (!USE_BLOB) return localReadOne<Settings>('settings.json', DEFAULT_SETTINGS);
+  if (!USE_BLOB) {
+    const local = localReadOne<Settings>('settings.json', DEFAULT_SETTINGS);
+    // GitHub 폴백 (로컬에 파일이 없고 GitHub 있을 때)
+    if (local === DEFAULT_SETTINGS && USE_GITHUB) {
+      const gh = await ghGetSettings();
+      if (gh !== null) return gh;
+    }
+    return local;
+  }
 
   // 직접 URL로 읽기 (Simple Op - Advanced Op 소모 없음)
   const settings = await blobGet<Settings>('dx-settings.json');
-  return settings ?? DEFAULT_SETTINGS;
+  if (settings !== null) return settings;
+
+  // Blob 접근 실패 시 GitHub 폴백
+  if (USE_GITHUB) {
+    const gh = await ghGetSettings();
+    if (gh !== null) return gh;
+  }
+
+  return DEFAULT_SETTINGS;
 }
 
 export async function saveSettings(settings: Settings): Promise<void> {
-  if (!USE_BLOB) { localWrite('settings.json', settings); return; }
-  await blobPut('dx-settings.json', settings);
+  if (!USE_BLOB) {
+    localWrite('settings.json', settings);
+    if (USE_GITHUB) ghSaveSettings(settings).catch(() => {});
+    return;
+  }
+  // Blob 저장 + GitHub 백업 병렬 실행
+  await Promise.allSettled([
+    blobPut('dx-settings.json', settings),
+    USE_GITHUB ? ghSaveSettings(settings) : Promise.resolve(),
+  ]);
 }
