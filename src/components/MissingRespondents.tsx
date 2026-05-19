@@ -104,31 +104,23 @@ export default function MissingRespondents({ responses }: { responses: DXRespons
   };
 
   const handleCompare = () => {
-    const sheet = sheets.find(s => s.sheetName === selectedSheet);
-    if (!sheet) return;
+  const sheet = sheets.find(s => s.sheetName === selectedSheet);
+  if (!sheet) return;
 
-    const respondedByName = new Map<string, string[]>();
-    for (const r of responses) {
-      const n = r.name.trim();
-      if (!respondedByName.has(n)) respondedByName.set(n, []);
-      respondedByName.get(n)!.push(normDept(r.department));
-    }
+  // 이름 정규화 (공백 제거)
+  const respondedNames = new Set(
+    responses.map(r => r.name.trim().replace(/\s+/g, ''))
+  );
 
-    const result: Attendee[] = [];
-    for (const a of sheet.attendees) {
-      const n = a.name.trim();
-      const depts = respondedByName.get(n);
-      if (!depts) {
-        result.push(a);
-      } else {
-        const aNorm = normDept(a.dept);
-        if (aNorm && !depts.some(d => d && (d.includes(aNorm) || aNorm.includes(d)))) {
-          result.push(a);
-        }
-      }
+  const result: Attendee[] = [];
+  for (const a of sheet.attendees) {
+    const normalizedName = a.name.trim().replace(/\s+/g, '');
+    if (!respondedNames.has(normalizedName)) {
+      result.push(a);
     }
-    setMissing(result);
-  };
+  }
+  setMissing(result);
+};
 
   const copyEmails = () => {
     navigator.clipboard.writeText(missing!.map(m => m.email).join('; '));
