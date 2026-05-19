@@ -16,6 +16,18 @@ const SESSIONS = [
   { num: 10, date: "6/2" },
   { num: 11, date: "6/4" },
   { num: 12, date: "6/8" },
+  { num: 13, date: "6/9" },
+  { num: 14, date: "6/16" },
+  { num: 15, date: "6/24" },
+  { num: 16, date: "6/30" },
+  { num: 17, date: "7/1" },
+  { num: 18, date: "7/13" },
+  { num: 19, date: "7/16" },
+  { num: 20, date: "7/20" },
+  { num: 21, date: "7/22" },
+  { num: 22, date: "7/28" },
+  { num: 23, date: "8/4 오전" },
+  { num: 24, date: "8/4 오후" },
 ] as const;
 
 export default function Home() {
