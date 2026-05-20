@@ -28,6 +28,7 @@ const SESSIONS = [
   { num: 22, date: "7/28" },
   { num: 23, date: "8/4 오전" },
   { num: 24, date: "8/4 오후" },
+  { num: 25, date: "8/11" },
 ] as const;
 
 export default function Home() {
