@@ -7,6 +7,7 @@ import Image from "next/image";
 // 이 배열을 src/lib/sessions.ts 로 빼서 export 하시는 걸 권장드려요.
 // =============================================================================
 const SESSIONS = [
+  { num: 11, date: "6/4" },
   { num: 12, date: "6/8" },
   { num: 13, date: "6/9" },
   { num: 14, date: "6/16" },
