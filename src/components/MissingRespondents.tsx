@@ -64,7 +64,28 @@ export default function MissingRespondents({ responses }: { responses: DXRespons
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [pasteText, setPasteText] = useState('');
+  const [pasteAttendees, setPasteAttendees] = useState<Attendee[] | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const parsePasteText = (text: string): Attendee[] => {
+    return text.trim().split('\n').flatMap(line => {
+      const cols = line.split('\t');
+      const name = cols[0]?.trim();
+      const dept = cols[4]?.trim() || '';
+      const email = cols[6]?.trim() || '';
+      if (name && email && email.includes('@')) return [{ name, email, dept }];
+      return [];
+    });
+  };
+
+  const handlePasteCompare = () => {
+    const attendees = parsePasteText(pasteText);
+    if (attendees.length === 0) { alert('인식된 명단이 없습니다. 형식을 확인해주세요.'); return; }
+    setPasteAttendees(attendees);
+    const respondedNames = new Set(responses.map(r => r.name.trim().replace(/\s+/g, '')));
+    setMissing(attendees.filter(a => !respondedNames.has(a.name.trim().replace(/\s+/g, ''))));
+  };
 
   const processFile = async (file: File) => {
     if (!file.name.match(/\.(xls|xlsx)$/i)) {
@@ -131,6 +152,30 @@ export default function MissingRespondents({ responses }: { responses: DXRespons
   return (
     <div className="mt-6 pt-6 border-t border-gray-100">
       <p className="text-sm font-semibold text-gray-700 mb-3">📋 미응답자 조회</p>
+
+      {/* 붙여넣기 입력 영역 */}
+      <div className="mb-4">
+        <textarea
+          value={pasteText}
+          onChange={e => { setPasteText(e.target.value); setPasteAttendees(null); setMissing(null); }}
+          placeholder={"엑셀에서 명단을 복사해서 붙여넣기 하세요\n(이름 사번 - 직급 부서 사무실 이메일 형식)"}
+          className="w-full rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-700 px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-300"
+          rows={4}
+        />
+        <button
+          onClick={handlePasteCompare}
+          disabled={!pasteText.trim()}
+          className="mt-2 text-sm px-4 py-2 rounded-lg font-semibold text-white disabled:opacity-40"
+          style={{ background: '#2563eb' }}
+        >
+          비교하기
+        </button>
+        {pasteAttendees && (
+          <span className="ml-3 text-xs text-gray-400">{pasteAttendees.length}명 인식됨</span>
+        )}
+      </div>
+
+      <p className="text-xs text-gray-300 text-center mb-3">— 또는 파일 업로드 —</p>
 
       {/* 드래그 앤 드롭 업로드 영역 */}
       <div
