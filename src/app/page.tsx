@@ -7,11 +7,6 @@ import Image from "next/image";
 // 이 배열을 src/lib/sessions.ts 로 빼서 export 하시는 걸 권장드려요.
 // =============================================================================
 const SESSIONS = [
-  { num: 11, date: "6/4" },
-  { num: 12, date: "6/8" },
-  { num: 13, date: "6/9" },
-  { num: 14, date: "6/16" },
-  { num: 15, date: "6/24" },
   { num: 16, date: "6/30" },
   { num: 17, date: "7/1" },
   { num: 18, date: "7/13" },
@@ -21,7 +16,14 @@ const SESSIONS = [
   { num: 22, date: "7/28" },
   { num: 23, date: "8/4 오전" },
   { num: 24, date: "8/4 오후" },
-  { num: 25, date: "광양" },
+  { num: 25, date: "9/11" },
+] as const;
+
+const P1_SESSIONS = [
+  { label: "P1 1회차", date: "6/30" },
+  { label: "P1 2회차", date: "7/7" },
+  { label: "P1 3회차", date: "8/13" },
+  { label: "P1 4회차", date: "8/25" },
 ] as const;
 
 export default function Home() {
@@ -68,6 +70,34 @@ export default function Home() {
               >
                 <span className="text-blue-500 font-semibold leading-tight">
                   {num}회차
+                </span>
+                <span className="mt-0.5 text-xs text-slate-400 leading-tight">
+                  {date}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* P1 회차 섹션 */}
+        <section className="bg-white/70 backdrop-blur-sm rounded-2xl border border-blue-100 shadow-sm p-6 sm:p-8 mt-6">
+          <h2 className="text-center text-blue-500 font-semibold mb-6">
+            P1 과정 회차를 선택해주세요
+          </h2>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {P1_SESSIONS.map(({ label, date }) => (
+              <Link
+                key={label}
+                href={`/survey/${encodeURIComponent(label)}`}
+                className="group flex flex-col items-center justify-center
+                           bg-white rounded-xl border border-blue-100
+                           py-3 px-4 shadow-sm
+                           transition hover:border-blue-300 hover:shadow-md hover:-translate-y-0.5
+                           focus:outline-none focus:ring-2 focus:ring-blue-300"
+              >
+                <span className="text-blue-500 font-semibold leading-tight">
+                  {label}
                 </span>
                 <span className="mt-0.5 text-xs text-slate-400 leading-tight">
                   {date}
