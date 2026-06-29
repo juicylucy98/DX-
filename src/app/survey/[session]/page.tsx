@@ -47,7 +47,12 @@ function RadioGroup({
 export default function SurveyPage() {
   const router = useRouter();
   const params = useParams();
-  const session = Number(params.session);
+  const sessionRaw = decodeURIComponent(String(params.session));
+  const sessionNum = Number(sessionRaw);
+  // 숫자 회차(16~25 등) 또는 "P1 N회차" 형태 모두 허용
+  const isValid = (!isNaN(sessionNum) && sessionNum >= 1 && sessionNum <= 30)
+    || /^P1 \d+회차$/.test(sessionRaw);
+  const session: string | number = isNaN(sessionNum) ? sessionRaw : sessionNum;
 
   const [name, setName] = useState('');
   const [grade, setGrade] = useState('');
@@ -60,8 +65,8 @@ export default function SurveyPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!session || session < 1 || session > 30) router.replace('/');
-  }, [session, router]);
+    if (!isValid) router.replace('/');
+  }, [isValid, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,7 +104,9 @@ export default function SurveyPage() {
       <header className="header-gradient text-white pt-6 pb-0 px-4 text-center overflow-hidden">
         <p className="text-xs opacity-75 tracking-widest uppercase mb-1">POSCO International</p>
         <h1 className="text-xl font-bold">DX 리터러시 향상 교육</h1>
-        <p className="text-sm opacity-85 mt-1 mb-3">제{session}회차 만족도 조사</p>
+        <p className="text-sm opacity-85 mt-1 mb-3">
+          {typeof session === 'number' ? `제${session}회차` : session} 만족도 조사
+        </p>
         <div className="flex justify-center items-end">
           <img src="/포잉.png" alt="" className="w-16 h-16 object-contain opacity-95" style={{ marginBottom: '-4px' }} />
         </div>
