@@ -26,7 +26,7 @@ export default function AdminDashboardPage() {
   const router = useRouter();
   const [data, setData] = useState<AdminData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeSession, setActiveSession] = useState<number | 'all'>('all');
+  const [activeSession, setActiveSession] = useState<number | string | 'all'>('all');
   const [toggling, setToggling] = useState(false);
   const [clearing, setClearing] = useState(false);
   const [error, setError] = useState('');
@@ -80,6 +80,8 @@ export default function AdminDashboardPage() {
       <p className="text-red-500">{error}</p>
     </div>
   );
+
+  const sessionLabel = (s: number | string) => typeof s === 'number' ? `${s}회차` : s;
 
   const avg = (key: 'avgQ2' | 'avgQ3' | 'avgQ5', sessions: SessionAnalytics[]) => {
     const total = sessions.reduce((s, r) => s + r.total, 0);
@@ -186,7 +188,7 @@ export default function AdminDashboardPage() {
               <button key={s.session}
                 onClick={() => setActiveSession(s.session)}
                 className={`px-4 py-3 text-sm font-semibold whitespace-nowrap flex-shrink-0 ${activeSession === s.session ? 'tab-active' : 'text-gray-500'}`}>
-                {s.session}회차 ({s.total})
+                {sessionLabel(s.session)} ({s.total})
               </button>
             ))}
           </div>
@@ -196,7 +198,7 @@ export default function AdminDashboardPage() {
             {displaySessions.length > 0 && (
               <div className="mb-6">
                 <p className="text-sm font-semibold text-gray-700 mb-3">
-                  {activeSession === 'all' ? '회차별 평균 점수' : `${activeSession}회차 통계`}
+                  {activeSession === 'all' ? '회차별 평균 점수' : `${sessionLabel(activeSession)} 통계`}
                 </p>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm border-collapse">
@@ -212,7 +214,7 @@ export default function AdminDashboardPage() {
                     <tbody>
                       {displaySessions.map(s => (
                         <tr key={s.session} className="border-t border-gray-100 hover:bg-gray-50">
-                          <td className="px-3 py-2 font-semibold" style={{ color: '#2563eb' }}>{s.session}회차</td>
+                          <td className="px-3 py-2 font-semibold" style={{ color: '#2563eb' }}>{sessionLabel(s.session)}</td>
                           <td className="px-3 py-2 text-center text-gray-600">{s.total}명</td>
                           <td className="px-3 py-2 text-center font-bold" style={{ color: '#2563eb' }}>{s.avgQ2.toFixed(1)}</td>
                           <td className="px-3 py-2 text-center font-bold" style={{ color: '#2563eb' }}>{s.avgQ3.toFixed(1)}</td>
@@ -270,7 +272,7 @@ export default function AdminDashboardPage() {
                     <div key={r.id} className="bg-gray-50 rounded-xl p-4 text-sm">
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
                         <span className="font-bold px-2 py-0.5 rounded-full text-xs text-white" style={{ background: '#2563eb' }}>
-                          {r.session}회차
+                          {sessionLabel(r.session)}
                         </span>
                         <span className="font-semibold text-gray-700">{r.name}</span>
                         <span className="text-gray-500">{r.grade} · {r.department}</span>

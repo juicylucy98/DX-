@@ -1,7 +1,7 @@
 export interface DXResponse {
   id: string;
   timestamp: string;
-  session: number; // 1~30
+  session: number | string; // 1~30 또는 "P1 N회차"
   name: string;
   grade: string;   // 직급
   department: string; // 부서
@@ -16,7 +16,7 @@ export interface Settings {
 }
 
 export interface SessionAnalytics {
-  session: number;
+  session: number | string;
   total: number;
   avgQ2: number;
   avgQ3: number;
