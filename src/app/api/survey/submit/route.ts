@@ -12,7 +12,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { session, name, grade, department, q2, q3, q4, q5 } = body;
 
-    if (!session || session < 1 || session > 30) {
+    const isValidSession = (typeof session === 'number' && session >= 1 && session <= 30)
+      || (typeof session === 'string' && /^P1 \d+회차$/.test(session));
+    if (!isValidSession) {
       return NextResponse.json({ error: '올바른 회차를 선택해주세요.' }, { status: 400 });
     }
     if (!name?.trim() || !grade?.trim() || !department?.trim()) {
@@ -23,7 +25,7 @@ export async function POST(req: NextRequest) {
     }
 
     const responseData = {
-      session: Number(session),
+      session: typeof session === 'string' ? session : Number(session),
       name: name.trim(),
       grade: grade.trim(),
       department: department.trim(),
