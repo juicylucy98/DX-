@@ -81,7 +81,10 @@ export default function AdminDashboardPage() {
     </div>
   );
 
-  const sessionLabel = (s: number | string) => typeof s === 'number' ? `${s}회차` : s;
+  const sessionLabel = (s: number | string | null) =>
+    s === null || s === undefined ? '미분류'
+    : typeof s === 'number' ? `${s}회차`
+    : s;
 
   const avg = (key: 'avgQ2' | 'avgQ3' | 'avgQ5', sessions: SessionAnalytics[]) => {
     const total = sessions.reduce((s, r) => s + r.total, 0);
