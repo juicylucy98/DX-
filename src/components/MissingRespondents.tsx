@@ -72,8 +72,11 @@ export default function MissingRespondents({ responses }: { responses: DXRespons
     return text.trim().split('\n').flatMap(line => {
       const cols = line.split('\t');
       const name = cols[0]?.trim();
-      const dept = cols[4]?.trim() || '';
-      const email = cols[6]?.trim() || '';
+      // 이메일 컬럼 자동 탐지
+      const emailIdx = cols.findIndex(c => c.includes('@'));
+      const email = emailIdx >= 0 ? cols[emailIdx].trim() : '';
+      // 부서: 이메일 앞에서 사번처럼 보이지 않는 첫 번째 긴 텍스트
+      const dept = cols.find((c, i) => i > 0 && i !== emailIdx && c.trim().length > 3 && !/^\d+$/.test(c.trim()))?.trim() || '';
       if (name && email && email.includes('@')) return [{ name, email, dept }];
       return [];
     });
