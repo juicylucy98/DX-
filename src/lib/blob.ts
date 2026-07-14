@@ -7,7 +7,7 @@ import {
   ghSaveSettings,
 } from './github-storage';
 
-const USE_BLOB = !!process.env.BLOB_READ_WRITE_TOKEN;
+const USE_BLOB = false; // GitHub를 메인 스토리지로 사용 (Vercel Blob 한도 절약)
 
 import path from 'path';
 import fs from 'fs';
