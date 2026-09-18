@@ -49,11 +49,13 @@ export default function SurveyPage() {
   const params = useParams();
   const sessionRaw = decodeURIComponent(String(params.session));
   const sessionNum = Number(sessionRaw);
-  // 숫자 회차(16~25 등) 또는 "P1 N회차" 형태 모두 허용
-  const isValid = (!isNaN(sessionNum) && sessionNum >= 1 && sessionNum <= 30)
-    || /^P1 \d+회차$/.test(sessionRaw);
-  const session: string | number = isNaN(sessionNum) ? sessionRaw : sessionNum;
 
+  // 숫자 회차, "P1 N회차", 또는 "해외 N차수" 형태 모두 허용
+  const isValid = (!isNaN(sessionNum) && sessionNum >= 1 && sessionNum <= 30)
+    || /^P1 \d+회차$/.test(sessionRaw)
+    || /^해외 \d+차수$/.test(sessionRaw);
+
+  const session: string | number = isNaN(sessionNum) ? sessionRaw : sessionNum;
   const [name, setName] = useState('');
   const [grade, setGrade] = useState('');
   const [department, setDepartment] = useState('');

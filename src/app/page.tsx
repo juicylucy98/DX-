@@ -3,16 +3,15 @@ import Image from "next/image";
 
 // =============================================================================
 // 회차 정보 — 추후 회차/날짜 변경 시 이 배열만 수정하면 됩니다.
-// 다른 페이지(설문 작성, 관리자 대시보드)에서도 동일한 데이터를 쓰려면
-// 이 배열을 src/lib/sessions.ts 로 빼서 export 하시는 걸 권장드려요.
+// 해외 교육 회차만 노출하고, P1 회차는 아예 제거합니다.
 // =============================================================================
 const SESSIONS = [
-  { id: "overseas-1", label: "해외 1차수", date: "9.21" },
-  { id: "overseas-2", label: "해외 2차수", date: "10.13" },
-  { id: "overseas-3", label: "해외 3차수", date: "10.14" },
-  { id: "overseas-4", label: "해외 4차수", date: "10.16" },
-  { id: "overseas-5", label: "해외 5차수", date: "10.20" },
-  { id: "overseas-6", label: "해외 6차수", date: "10.26" }
+  { num: 1, label: "해외 1차수", date: "9.21" },
+  { num: 2, label: "해외 2차수", date: "10.13" },
+  { num: 3, label: "해외 3차수", date: "10.14" },
+  { num: 4, label: "해외 4차수", date: "10.16" },
+  { num: 5, label: "해외 5차수", date: "10.20" },
+  { num: 6, label: "해외 6차수", date: "10.26" },
 ] as const;
 
 export default function Home() {
@@ -59,34 +58,6 @@ export default function Home() {
               >
                 <span className="text-blue-500 font-semibold leading-tight">
                   {num}회차
-                </span>
-                <span className="mt-0.5 text-xs text-slate-400 leading-tight">
-                  {date}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* P1 회차 섹션 */}
-        <section className="bg-white/70 backdrop-blur-sm rounded-2xl border border-blue-100 shadow-sm p-6 sm:p-8 mt-6">
-          <h2 className="text-center text-blue-500 font-semibold mb-6">
-            P1 과정 회차를 선택해주세요
-          </h2>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {P1_SESSIONS.map(({ label, date }) => (
-              <Link
-                key={label}
-                href={`/survey/${encodeURIComponent(label)}`}
-                className="group flex flex-col items-center justify-center
-                           bg-white rounded-xl border border-blue-100
-                           py-3 px-4 shadow-sm
-                           transition hover:border-blue-300 hover:shadow-md hover:-translate-y-0.5
-                           focus:outline-none focus:ring-2 focus:ring-blue-300"
-              >
-                <span className="text-blue-500 font-semibold leading-tight">
-                  {label}
                 </span>
                 <span className="mt-0.5 text-xs text-slate-400 leading-tight">
                   {date}
