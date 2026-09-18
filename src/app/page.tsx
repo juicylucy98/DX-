@@ -7,23 +7,12 @@ import Image from "next/image";
 // 이 배열을 src/lib/sessions.ts 로 빼서 export 하시는 걸 권장드려요.
 // =============================================================================
 const SESSIONS = [
-  { num: 16, date: "6/30" },
-  { num: 17, date: "7/1" },
-  { num: 18, date: "7/13" },
-  { num: 19, date: "7/16" },
-  { num: 20, date: "7/20" },
-  { num: 21, date: "7/22" },
-  { num: 22, date: "7/28" },
-  { num: 23, date: "8/4 오전" },
-  { num: 24, date: "8/4 오후" },
-  { num: 25, date: "9/11" },
-] as const;
-
-const P1_SESSIONS = [
-  { label: "P1 1회차", date: "6/30" },
-  { label: "P1 2회차", date: "7/7" },
-  { label: "P1 3회차", date: "8/13" },
-  { label: "P1 4회차", date: "8/25" },
+  { id: "overseas-1", label: "해외 1차수", date: "9.21" },
+  { id: "overseas-2", label: "해외 2차수", date: "10.13" },
+  { id: "overseas-3", label: "해외 3차수", date: "10.14" },
+  { id: "overseas-4", label: "해외 4차수", date: "10.16" },
+  { id: "overseas-5", label: "해외 5차수", date: "10.20" },
+  { id: "overseas-6", label: "해외 6차수", date: "10.26" }
 ] as const;
 
 export default function Home() {
